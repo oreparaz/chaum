@@ -62,7 +62,7 @@ def small_test():
     # bank -> user: s
     s = bank_sign(ec.nistp256, k, e, priv)
 
-    # step 4: user computes signature (rp, sp)
+    # step 4: user computes, verifies and releases signature (rp, sp)
     sp = user_unblind(ec.nistp256, s, a)
 
     print "blinded sig (r,s) ", (rp, sp)
