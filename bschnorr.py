@@ -47,22 +47,22 @@ def small_test():
     priv, Q = ec.nistp256.generate_key()
 
     # step 1: bank prepares a Schnorr nonce and commits to it
+    # bank keeps: k 
+    # bank -> user: R
     k, R = bank_init(ec.nistp256)
 
-    # bank -> user: R
-
-    # step 2: user blinding
+    # step 2: user prepares blinding factors
+    # user keeps:  (a, rp, ep) 
+    # user -> bank: e
     msg = 'hello world'
     a, rp, ep, e = user_blind(ec.nistp256, H, Q, msg, R)
 
-    # user -> bank: e
-
     # step 3: bank actually signs
+    # bank -> user: s
     s = bank_sign(ec.nistp256, k, e, priv)
 
-    # bank -> user: s
-
-    # step 4: user unblinds, signature is (rp, sp)
+    # step 4: user unblinds
+    # user keeps output signature (rp, sp)
     sp = user_unblind(ec.nistp256, s, a)
 
     print "blinded sig (r,s) ", (rp, sp)
