@@ -24,7 +24,7 @@ def user_blind(curve, hash, pub, message, R):
 
     xrp = curve.fe2i(Rp.x)
 
-    # XXX: serialize properly inputs to hash function
+    # XXX: properly serialize inputs to hash function
     # XXX: add public key into hash input
     ep = _hash_message(curve, hash, hex(xrp) + message)
     e = ec.modp(curve.n, ep - b)[0]
@@ -44,6 +44,7 @@ import hashlib
 H = hashlib.sha256
 
 def small_test():
+    # bank generates Schnorr key pair
     priv, Q = ec.nistp256.generate_key()
 
     # step 1: bank prepares a Schnorr nonce and commits to it
@@ -52,7 +53,7 @@ def small_test():
     k, R = bank_init(ec.nistp256)
 
     # step 2: user prepares blinding factors
-    # user keeps:  (a, rp, ep) 
+    # user keeps:  (a, rp) 
     # user -> bank: e
     msg = 'hello world'
     a, rp, ep, e = user_blind(ec.nistp256, H, Q, msg, R)
@@ -61,8 +62,7 @@ def small_test():
     # bank -> user: s
     s = bank_sign(ec.nistp256, k, e, priv)
 
-    # step 4: user unblinds
-    # user keeps output signature (rp, sp)
+    # step 4: user computes signature (rp, sp)
     sp = user_unblind(ec.nistp256, s, a)
 
     print "blinded sig (r,s) ", (rp, sp)
