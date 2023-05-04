@@ -4,6 +4,8 @@
 Comedy blinded Schnorr signing and verification.
 Don't use this for anything important.
 Not intended to be interoperable.
+
+!!! broken !!! check out https://eprint.iacr.org/2020/945.pdf Section 5.1
 """
 
 import ec
